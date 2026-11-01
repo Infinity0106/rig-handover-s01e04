@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { loadConfig, type RigConfig } from './config.js';
 import { lane } from './lane.js';
+import { byJob } from './digest/byJob.js';
 import { readNight } from './digest/readNight.js';
 import { readStatus } from './status.js';
 import { Layout } from './views/layout.js';
@@ -34,7 +35,7 @@ export function createApp(config: RigConfig = loadConfig()) {
   app.get('/api/digest/:night', (c) => {
     const night = readNight(config.runsDir, c.req.param('night'));
     if (!night) return c.json({ error: 'no such night' }, 404);
-    return c.json([...night.rows].sort((a, b) => (a.job < b.job ? -1 : a.job > b.job ? 1 : 0)));
+    return c.json(byJob(night.rows));
   });
 
   return app;
