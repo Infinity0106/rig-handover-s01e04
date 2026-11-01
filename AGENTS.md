@@ -28,7 +28,27 @@ Read first: `docs/vision.md`, `docs/styleguide.md`. Decisions: `docs/adr/`.
    ```
 
 5. An issue is closed only when its "Done when" holds. If it can't hold yet, leave it open and
-   say what it waits on.
+   say what it waits on. When "Done when" depends on someone else (a reviewer looking, a reply),
+   sending is not done: close it only after their event, never right after your send.
+6. Before closing an issue, check the work is on the default branch: `git status` is clean,
+   `git log origin/main` has the commit. A failed commit or push leaves the issue open.
+
+## Every issue carries
+
+- First line: `Source: plan.md § <n>`.
+- Label: `plan:<plan name>` (e.g. `plan:morning-digest`).
+- Sections: Scope, Done when, Blocked by, Rules (DRY, YAGNI, atomic title-only commits with
+  `closes #n`, closing comment from step 4).
+
+## Previews (ADR 0003)
+
+Save the page with a command, outside the repo, in a folder holding only `index.html`:
+`curl -s localhost:8787/digest/<night> -o <dir>/index.html`. Host: Cloudflare Pages via
+`npx wrangler pages deploy <dir> --project-name <project> --branch main`. A new project needs
+`wrangler pages project create <project> --production-branch main --force` once, or Wrangler
+makes a Worker instead. Clean-up: run rig with `LANE_MARKER=` (not `pnpm start`, which reads
+`.env`), save again, deploy over the same project, then delete older deployments that still
+carry the marker.
 
 ## Skills
 
